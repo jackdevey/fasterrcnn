@@ -8,6 +8,8 @@ import torch
 from torch_utils import utils
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
+import itertools
+from tabulate import tabulate
 
 
 class CocoEvaluator:
@@ -53,6 +55,9 @@ class CocoEvaluator:
         for iou_type, coco_eval in self.coco_eval.items():
             print(f"IoU metric: {iou_type}")
             coco_eval.summarize()
+            # Print AP and AR per class table
+            print(per_class_AP_table(coco_eval, self.coco_gt.getCatIds()))
+            print(per_class_AR_table(coco_eval, self.coco_gt.getCatIds()))
         return coco_eval.stats
 
     def prepare(self, predictions, iou_type):
@@ -147,6 +152,52 @@ class CocoEvaluator:
                 ]
             )
         return coco_results
+    
+def per_class_AP_table(coco_eval, class_names, headers=["class", "AP"], colums=6):
+    per_class_AP = {}
+    precisions = coco_eval.eval["precision"]
+    # dimension of precisions: [TxRxKxAxM]
+    # precision has dims (iou, recall, cls, area range, max dets)
+    assert len(class_names) == precisions.shape[2]
+
+    for idx, name in enumerate(class_names):
+        # area range index 0: all area ranges
+        # max dets index -1: typically 100 per image
+        precision = precisions[:, :, idx, 0, -1]
+        precision = precision[precision > -1]
+        ap = np.mean(precision) if precision.size else float("nan")
+        per_class_AP[name] = float(ap)
+
+    num_cols = min(colums, len(per_class_AP) * len(headers))
+    result_pair = [x for pair in per_class_AP.items() for x in pair]
+    row_pair = itertools.zip_longest(*[result_pair[i::num_cols] for i in range(num_cols)])
+    table_headers = headers * (num_cols // len(headers))
+    table = tabulate(
+        row_pair, tablefmt="pipe", floatfmt=".3f", headers=table_headers, numalign="left",
+    )
+    return table
+
+def per_class_AR_table(coco_eval, class_names, headers=["class", "AR"], colums=6):
+    per_class_AR = {}
+    recalls = coco_eval.eval["recall"]
+    # dimension of recalls: [TxKxAxM]
+    # recall has dims (iou, cls, area range, max dets)
+    assert len(class_names) == recalls.shape[1]
+
+    for idx, name in enumerate(class_names):
+        recall = recalls[:, idx, 0, -1]
+        recall = recall[recall > -1]
+        ar = np.mean(recall) if recall.size else float("nan")
+        per_class_AR[name] = float(ar)
+
+    num_cols = min(colums, len(per_class_AR) * len(headers))
+    result_pair = [x for pair in per_class_AR.items() for x in pair]
+    row_pair = itertools.zip_longest(*[result_pair[i::num_cols] for i in range(num_cols)])
+    table_headers = headers * (num_cols // len(headers))
+    table = tabulate(
+        row_pair, tablefmt="pipe", floatfmt=".3f", headers=table_headers, numalign="left",
+    )
+    return table
 
 
 def convert_to_xywh(boxes):
