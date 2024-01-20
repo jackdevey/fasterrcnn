@@ -325,7 +325,7 @@ def set_dir(type="training",dir_name=None, project_dir=None):
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
     else:
-        num_train_dirs_present = len(os.listdir('outputs/{type}/'))
+        num_train_dirs_present = len(os.listdir(f"outputs/{type}/"))
         next_dir_num = num_train_dirs_present + 1
         new_dir_name = f"outputs/{type}/res_{next_dir_num}"
         os.makedirs(new_dir_name, exist_ok=True)
