@@ -234,7 +234,7 @@ def main(args):
     SAVE_VALID_PREDICTIONS = data_configs['SAVE_VALID_PREDICTION_IMAGES']
     BATCH_SIZE = args['batch']
     VISUALIZE_TRANSFORMED_IMAGES = args['vis_transformed']
-    OUT_DIR = set_dir("training", args['name'], args['project_dir'])
+    OUT_DIR = set_dir(type="training", dir_name=args['name'], project_dir=args['project_dir'])
     COLORS = np.random.uniform(0, 1, size=(len(CLASSES), 3))
     SCALER = torch.cuda.amp.GradScaler() if args['amp'] else None
     # Set logging file.
