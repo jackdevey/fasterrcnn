@@ -309,7 +309,7 @@ def set_infer_dir():
     os.makedirs(new_dir_name, exist_ok=True)
     return new_dir_name
 
-def set_training_dir(dir_name=None, project_dir=None):
+def set_dir(type="training",dir_name=None, project_dir=None):
     """
     This functions counts the number of training directories already present
     and creates a new one in `outputs/training/`. 
@@ -318,16 +318,16 @@ def set_training_dir(dir_name=None, project_dir=None):
     if project_dir != None:
         os.makedirs(project_dir, exist_ok=True)
         return project_dir
-    if not os.path.exists('outputs/training'):
-        os.makedirs('outputs/training')
+    if not os.path.exists(f"outputs/{type}"):
+        os.makedirs(f"outputs/{type}")
     if dir_name:
-        new_dir_name = f"outputs/training/{dir_name}"
+        new_dir_name = f"outputs/{type}/{dir_name}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
     else:
-        num_train_dirs_present = len(os.listdir('outputs/training/'))
+        num_train_dirs_present = len(os.listdir('outputs/{type}/'))
         next_dir_num = num_train_dirs_present + 1
-        new_dir_name = f"outputs/training/res_{next_dir_num}"
+        new_dir_name = f"outputs/{type}/res_{next_dir_num}"
         os.makedirs(new_dir_name, exist_ok=True)
         return new_dir_name
 

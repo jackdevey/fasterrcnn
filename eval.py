@@ -20,7 +20,6 @@ import torchvision
 import time
 import numpy as np
 
-torch.multiprocessing.set_sharing_strategy('file_system')
 
 if __name__ == '__main__':
     # Construct the argument parser.

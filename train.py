@@ -26,7 +26,7 @@ from datasets import (
 )
 from models.create_fasterrcnn_model import create_model
 from utils.general import (
-    set_training_dir, Averager, 
+    set_dir, Averager, 
     save_model, save_loss_plot,
     show_tranformed_image,
     save_mAP, save_model_state, SaveBestModel,
@@ -234,7 +234,7 @@ def main(args):
     SAVE_VALID_PREDICTIONS = data_configs['SAVE_VALID_PREDICTION_IMAGES']
     BATCH_SIZE = args['batch']
     VISUALIZE_TRANSFORMED_IMAGES = args['vis_transformed']
-    OUT_DIR = set_training_dir(args['name'], args['project_dir'])
+    OUT_DIR = set_dir("training", args['name'], args['project_dir'])
     COLORS = np.random.uniform(0, 1, size=(len(CLASSES), 3))
     SCALER = torch.cuda.amp.GradScaler() if args['amp'] else None
     # Set logging file.
