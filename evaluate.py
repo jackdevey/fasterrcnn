@@ -2,6 +2,8 @@ import torch
 import argparse
 import yaml
 
+import numpy as np
+
 from models.create_fasterrcnn_model import create_model
 
 from datasets import (
@@ -104,6 +106,7 @@ if __name__ == "__main__":
     NUM_CLASSES = data_configs['NC']
     CLASSES = data_configs['CLASSES']
     SAVE_VALID_PREDICTIONS = data_configs['SAVE_VALID_PREDICTION_IMAGES']
+    COLORS = np.random.uniform(0, 1, size=(len(CLASSES), 3))
     NUM_WORKERS = args['workers']
     DEVICE = args['device']
     BATCH_SIZE = args['batch']
@@ -145,5 +148,5 @@ if __name__ == "__main__":
         save_valid_preds=SAVE_VALID_PREDICTIONS,
         out_dir=OUT_DIR,
         classes=CLASSES,
-        colors=None
+        colors=COLORS
     )
