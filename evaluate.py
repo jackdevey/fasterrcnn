@@ -112,7 +112,7 @@ if __name__ == "__main__":
     IMAGE_SIZE = args['imgsz']
     
     # Set the output directory
-    OUT_DIR = set_dir("evaluation", args['name'], args['project_dir'])
+    OUT_DIR = set_dir(type="evaluation", name=args['name'], dir_name=args['project_dir'])
     
     # Load the pretrained model
     create_model = create_model[args['model']]
