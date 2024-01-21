@@ -1,3 +1,5 @@
+> This repo is a standalone fork of [sovit-123/fasterrcnn-pytorch-training-pipeline](https://github.com/sovit-123/fasterrcnn-pytorch-training-pipeline), with changes to the evaluation scripts for my specific use cases. Please use the original repository.
+
 # A Simple Pipeline to Train PyTorch FasterRCNN Model
 
 
